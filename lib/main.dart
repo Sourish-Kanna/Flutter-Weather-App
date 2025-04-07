@@ -85,19 +85,20 @@ class _HomePageState extends State<HomePage> {
       }
     }
     Position position = await Geolocator.getCurrentPosition();
-    print(position);
-    String apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+    // debugPrint(position.toString());
+    String apiKey = '49fd406b29a03cc12e89ee9354e08a60';
     String url = 'https://api.openweathermap.org/data/2.5/weather?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey&units=metric';
+    // debugPrint(url);
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       setState(() {
-        weatherInfo = "Weather: ${data['weather'][0]['description']}, Temp: ${data['main']['temp']}°C";
+        weatherInfo = "Weather: ${data['weather'][0]['description']}, \nTemp: ${data['main']['temp']}°C";
       });
     } else {
       setState(() {
-        weatherInfo = "Failed to fetch weather data";
+        weatherInfo = "Failed to fetch weather data with \nstatus code: ${response.statusCode}";
       });
     }
   }
