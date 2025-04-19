@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Weather & Pollution App',
       theme: ThemeData(
-        primaryColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
+        primaryColor: Color(0xFF2B3CBB),
         scaffoldBackgroundColor: Colors.white,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
+            backgroundColor: Color(0xFF2B3CBB),
             foregroundColor: Colors.white,
           ),
         ),
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),
         title: Text('Home'),
       ),
       body: Center(
@@ -167,7 +167,7 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),
         title: Text("Weather Info"),
       ),
       body: Center(
@@ -269,7 +269,7 @@ class _PollutionPageState extends State<PollutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),
         title: Text("Air Pollution Info"),
       ),
       body: Center(
@@ -285,14 +285,14 @@ class _PollutionPageState extends State<PollutionPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.air, color: Color(0xFF2CC8F7), size: 80),
+                Icon(Icons.air, color: Color(0xFFA3A7AC), size: 80),
                 SizedBox(height: 16),
                 Text(
                   "AQI Level: $aqi",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF000000), // Geeks for Geeks Green
+                    color: Color(0xFF000000),
                   ),
                 ),
                 SizedBox(height: 16),
@@ -300,7 +300,7 @@ class _PollutionPageState extends State<PollutionPage> {
                   "${e.key.toUpperCase()}: ${e.value}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Color(0xFF000000), // Geeks for Geeks Green
+                    color: Color(0xFF000000),
                   ),
                 ))
               ],
@@ -311,7 +311,7 @@ class _PollutionPageState extends State<PollutionPage> {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             status,
-            style: TextStyle(fontSize: 18, color: Color(0xFF000000)), // Geeks for Geeks Green
+            style: TextStyle(fontSize: 18, color: Color(0xFF000000)),
             textAlign: TextAlign.center,
           ),
         ),
