@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Weather & Pollution App',
       theme: ThemeData(
-        primaryColor: Color(0xFFB9EFFF),  // Geeks for Geeks Green
+        primaryColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
         scaffoldBackgroundColor: Colors.white,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFB9EFFF),  // Geeks for Geeks Green
+            backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
             foregroundColor: Colors.white,
           ),
         ),
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                   labelText: 'Email',
                   labelStyle: TextStyle(color: Color(0xFF000000)), // Geeks for Geeks Green
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFB9EFFF)), // Geeks for Geeks Green
+                    borderSide: BorderSide(color: Color(0xFF000000)), // Geeks for Geeks Green
                   ),
                   border: OutlineInputBorder(),
                 ),
@@ -68,7 +68,7 @@ class LoginPage extends StatelessWidget {
                   labelText: 'Password',
                   labelStyle: TextStyle(color: Color(0xFF000000)), // Geeks for Geeks Green
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFB9EFFF)), // Geeks for Geeks Green
+                    borderSide: BorderSide(color: Color(0xFF000000)), // Geeks for Geeks Green
                   ),
                   border: OutlineInputBorder(),
                 ),
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9EFFF),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
         title: Text('Home'),
       ),
       body: Center(
@@ -167,7 +167,7 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9EFFF),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
         title: Text("Weather Info"),
       ),
       body: Center(
@@ -269,7 +269,7 @@ class _PollutionPageState extends State<PollutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9EFFF),  // Geeks for Geeks Green
+        backgroundColor: Color(0xFF2B3CBB),  // Geeks for Geeks Green
         title: Text("Air Pollution Info"),
       ),
       body: Center(
