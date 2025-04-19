@@ -10,6 +10,22 @@ void main() {
 const String openWeatherMapApiKey = '49fd406b29a03cc12e89ee9354e08a60';
 const Color Colour = Color(0xFF388BFD);
 
+Future<String?> getCityFromCoordinates(double lat, double lon) async {
+  final apiKey = openWeatherMapApiKey;
+  final url =
+      'https://api.openweathermap.org/geo/1.0/reverse?lat=$lat&lon=$lon&limit=1&appid=$apiKey';
+
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    if (data.isNotEmpty && data[0]['name'] != null) {
+      return data[0]['name'];
+    }
+  }
+  return null;
+}
+
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -53,8 +69,17 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     Position position = await Geolocator.getCurrentPosition();
-    _goToHome(position.latitude, position.longitude);
+    String? city = await getCityFromCoordinates(position.latitude, position.longitude);
+
+    if (city != null) {
+      _goToHome(position.latitude, position.longitude, city);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to get city from location.'),
+      ));
+    }
   }
+
 
   void _useSelectedCity() async {
     if (selectedCity == null) return;
@@ -68,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
       if (data.isNotEmpty) {
         final lat = data[0]['lat'];
         final lon = data[0]['lon'];
-        _goToHome(lat, lon);
+        _goToHome(lat, lon, selectedCity!);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('City not found.'),
@@ -81,12 +106,19 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _goToHome(double lat, double lon) {
+  void _goToHome(double lat, double lon, String cityName) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage(latitude: lat, longitude: lon)),
+      MaterialPageRoute(
+        builder: (context) => HomePage(
+          latitude: lat,
+          longitude: lon,
+          locationName: cityName,
+        ),
+      ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +167,9 @@ class _LoginPageState extends State<LoginPage> {
 class HomePage extends StatelessWidget {
   final double latitude;
   final double longitude;
+  final String locationName;
 
-  const HomePage({required this.latitude, required this.longitude});
+  const HomePage({required this.latitude, required this.longitude, required this.locationName,});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +182,11 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              "Location: $locationName",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
@@ -156,6 +194,7 @@ class HomePage extends StatelessWidget {
                   builder: (context) => WeatherPage(
                     latitude: latitude,
                     longitude: longitude,
+                    locationName: locationName,
                   ),
                 ),
               ),
@@ -169,6 +208,7 @@ class HomePage extends StatelessWidget {
                   builder: (context) => PollutionPage(
                     latitude: latitude,
                     longitude: longitude,
+                    locationName: locationName,
                   ),
                 ),
               ),
@@ -184,8 +224,9 @@ class HomePage extends StatelessWidget {
 class WeatherPage extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final String locationName;
 
-  WeatherPage({required this.latitude, required this.longitude});
+  WeatherPage({required this.latitude, required this.longitude, required this.locationName});
 
   @override
   _WeatherPageState createState() => _WeatherPageState();
@@ -247,6 +288,11 @@ class _WeatherPageState extends State<WeatherPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text(
+                  "Location: ${widget.locationName}",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20),
                 Icon(Icons.wb_sunny, color: Color(0xFFFFEB3B), size: 80),
                 SizedBox(height: 16),
                 Text(
@@ -289,8 +335,9 @@ class _WeatherPageState extends State<WeatherPage> {
 class PollutionPage extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final String locationName;
 
-  PollutionPage({required this.latitude, required this.longitude});
+  PollutionPage({required this.latitude, required this.longitude, required this.locationName});
 
   @override
   _PollutionPageState createState() => _PollutionPageState();
@@ -353,6 +400,11 @@ class _PollutionPageState extends State<PollutionPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text(
+                  "Location: ${widget.locationName}",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20),
                 Icon(Icons.air, color: Color(0xFFA3A7AC), size: 80),
                 SizedBox(height: 16),
                 Text(
