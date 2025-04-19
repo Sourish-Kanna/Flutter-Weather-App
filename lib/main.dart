@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Weather & Pollution App',
       theme: ThemeData(
-        primaryColor: Color(0xFFF78125),
+        primaryColor: Color(0xFF34A853),  // Geeks for Geeks Green
         scaffoldBackgroundColor: Colors.white,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFF78125),
+            backgroundColor: Color(0xFF34A853),  // Geeks for Geeks Green
             foregroundColor: Colors.white,
           ),
         ),
@@ -47,15 +47,15 @@ class LoginPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             children: [
-              Icon(Icons.cloud, size: 80, color: Color(0xFFF78125)),
+              Icon(Icons.cloud, size: 80, color: Color(0xFF34A853)), // Geeks for Geeks Green
               SizedBox(height: 20),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Color(0xFFF78125)),
+                  labelStyle: TextStyle(color: Color(0xFF34A853)), // Geeks for Geeks Green
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFF78125)),
+                    borderSide: BorderSide(color: Color(0xFF34A853)), // Geeks for Geeks Green
                   ),
                   border: OutlineInputBorder(),
                 ),
@@ -66,9 +66,9 @@ class LoginPage extends StatelessWidget {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(color: Color(0xFFF78125)),
+                  labelStyle: TextStyle(color: Color(0xFF34A853)), // Geeks for Geeks Green
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFF78125)),
+                    borderSide: BorderSide(color: Color(0xFF34A853)), // Geeks for Geeks Green
                   ),
                   border: OutlineInputBorder(),
                 ),
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF78125),
+        backgroundColor: Color(0xFF34A853),  // Geeks for Geeks Green
         title: Text('Home'),
       ),
       body: Center(
@@ -146,7 +146,7 @@ class _WeatherPageState extends State<WeatherPage> {
       }
     }
     Position position = await Geolocator.getCurrentPosition();
-    String apiKey = 'YOUR_API_KEY';
+    String apiKey = '49fd406b29a03cc12e89ee9354e08a60';
     String url =
         'https://api.openweathermap.org/data/2.5/weather?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey&units=metric';
 
@@ -167,13 +167,13 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF78125),
+        backgroundColor: Color(0xFF34A853),  // Geeks for Geeks Green
         title: Text("Weather Info"),
       ),
       body: Center(
         child: status == "success"
             ? Card(
-          color: Color(0xFFFFF3E0),
+          color: Color(0xFFF1F8E9),
           margin: EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -183,14 +183,14 @@ class _WeatherPageState extends State<WeatherPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.wb_sunny, color: Color(0xFFF78125), size: 80),
+                Icon(Icons.wb_sunny, color: Color(0xFF34A853), size: 80),
                 SizedBox(height: 16),
                 Text(
                   "${temperature.toStringAsFixed(1)}°C",
                   style: TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFF78125),
+                    color: Color(0xFF34A853), // Geeks for Geeks Green
                   ),
                 ),
                 SizedBox(height: 8),
@@ -199,7 +199,7 @@ class _WeatherPageState extends State<WeatherPage> {
                   style: TextStyle(
                     fontSize: 20,
                     letterSpacing: 1.2,
-                    color: Color(0xFFF78125),
+                    color: Color(0xFF34A853), // Geeks for Geeks Green
                   ),
                 ),
               ],
@@ -210,7 +210,7 @@ class _WeatherPageState extends State<WeatherPage> {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             status,
-            style: TextStyle(fontSize: 18, color: Color(0xFFF78125)),
+            style: TextStyle(fontSize: 18, color: Color(0xFF34A853)), // Geeks for Geeks Green
             textAlign: TextAlign.center,
           ),
         ),
@@ -245,7 +245,7 @@ class _PollutionPageState extends State<PollutionPage> {
       }
     }
     Position position = await Geolocator.getCurrentPosition();
-    String apiKey = 'YOUR_API_KEY';
+    String apiKey = '49fd406b29a03cc12e89ee9354e08a60';
     String url =
         'https://api.openweathermap.org/data/2.5/air_pollution?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey';
 
@@ -266,13 +266,13 @@ class _PollutionPageState extends State<PollutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF78125),
+        backgroundColor: Color(0xFF34A853),  // Geeks for Geeks Green
         title: Text("Air Pollution Info"),
       ),
       body: Center(
         child: status == "success"
             ? Card(
-          color: Color(0xFFFFF3E0),
+          color: Color(0xFFF1F8E9),
           margin: EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -282,14 +282,14 @@ class _PollutionPageState extends State<PollutionPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.air, color: Color(0xFFF78125), size: 80),
+                Icon(Icons.air, color: Color(0xFF34A853), size: 80),
                 SizedBox(height: 16),
                 Text(
                   "AQI Level: $aqi",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFF78125),
+                    color: Color(0xFF34A853), // Geeks for Geeks Green
                   ),
                 ),
                 SizedBox(height: 16),
@@ -297,7 +297,7 @@ class _PollutionPageState extends State<PollutionPage> {
                   "${e.key.toUpperCase()}: ${e.value}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Color(0xFFF78125),
+                    color: Color(0xFF34A853), // Geeks for Geeks Green
                   ),
                 ))
               ],
@@ -308,7 +308,7 @@ class _PollutionPageState extends State<PollutionPage> {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             status,
-            style: TextStyle(fontSize: 18, color: Color(0xFFF78125)),
+            style: TextStyle(fontSize: 18, color: Color(0xFF34A853)), // Geeks for Geeks Green
             textAlign: TextAlign.center,
           ),
         ),
