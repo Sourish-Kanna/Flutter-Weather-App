@@ -7,17 +7,20 @@ void main() {
   runApp(MyApp());
 }
 
+const String openWeatherMapApiKey = '49fd406b29a03cc12e89ee9354e08a60';
+const Color Colour = Color(0xFF388BFD);
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Weather & Pollution App',
       theme: ThemeData(
-        primaryColor: Color(0xFF2B3CBB),
+        primaryColor: Colour,
         scaffoldBackgroundColor: Colors.white,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF2B3CBB),
+            backgroundColor: Colour,
             foregroundColor: Colors.white,
           ),
         ),
@@ -28,14 +31,60 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
 
-  void _signIn(BuildContext context) {
-    Navigator.pushReplacement(
+class _LoginPageState extends State<LoginPage> {
+  String? selectedCity;
+  List<String> cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata'];
+
+  void _useCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Location permissions are permanently denied.'),
+        ));
+        return;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    _goToHome(position.latitude, position.longitude);
+  }
+
+  void _useSelectedCity() async {
+    if (selectedCity == null) return;
+
+    final apiKey = '49fd406b29a03cc12e89ee9354e08a60';
+    final url = 'https://api.openweathermap.org/geo/1.0/direct?q=$selectedCity&limit=1&appid=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data.isNotEmpty) {
+        final lat = data[0]['lat'];
+        final lon = data[0]['lon'];
+        _goToHome(lat, lon);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('City not found.'),
+        ));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to fetch coordinates.'),
+      ));
+    }
+  }
+
+  void _goToHome(double lat, double lon) {
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => HomePage(latitude: lat, longitude: lon)),
     );
   }
 
@@ -43,40 +92,37 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud, size: 80, color: Color(0xFF388BFD)), // Geeks for Geeks Green
+              Icon(Icons.cloud, size: 80, color: Color(0xFF388BFD)),
               SizedBox(height: 20),
-              TextField(
-                controller: emailController,
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyle(color: Color(0xFF000000)), // Geeks for Geeks Green
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF000000)), // Geeks for Geeks Green
-                  ),
+                  labelText: "Select a City",
                   border: OutlineInputBorder(),
                 ),
+                value: selectedCity,
+                items: cities
+                    .map((city) => DropdownMenuItem(
+                  value: city,
+                  child: Text(city),
+                ))
+                    .toList(),
+                onChanged: (value) => setState(() => selectedCity = value),
               ),
-              SizedBox(height: 20),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: TextStyle(color: Color(0xFF000000)), // Geeks for Geeks Green
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF000000)), // Geeks for Geeks Green
-                  ),
-                  border: OutlineInputBorder(),
-                ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _useSelectedCity,
+                child: Text("Use Selected City"),
               ),
               SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () => _signIn(context),
-                child: Text('Login'),
+              ElevatedButton.icon(
+                onPressed: _useCurrentLocation,
+                icon: Icon(Icons.my_location),
+                label: Text("Use Current Location"),
               ),
             ],
           ),
@@ -87,12 +133,17 @@ class LoginPage extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  final double latitude;
+  final double longitude;
+
+  const HomePage({required this.latitude, required this.longitude});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),
-        title: Text('Home'),
+        title: Text("Home"),
+        backgroundColor: Colour,
       ),
       body: Center(
         child: Column(
@@ -101,15 +152,25 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WeatherPage()),
+                MaterialPageRoute(
+                  builder: (context) => WeatherPage(
+                    latitude: latitude,
+                    longitude: longitude,
+                  ),
+                ),
               ),
               child: Text("Check Weather"),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PollutionPage()),
+                MaterialPageRoute(
+                  builder: (context) => PollutionPage(
+                    latitude: latitude,
+                    longitude: longitude,
+                  ),
+                ),
               ),
               child: Text("Check Air Pollution"),
             ),
@@ -121,6 +182,11 @@ class HomePage extends StatelessWidget {
 }
 
 class WeatherPage extends StatefulWidget {
+  final double latitude;
+  final double longitude;
+
+  WeatherPage({required this.latitude, required this.longitude});
+
   @override
   _WeatherPageState createState() => _WeatherPageState();
 }
@@ -137,18 +203,16 @@ class _WeatherPageState extends State<WeatherPage> {
   }
 
   Future<void> _getWeather() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        setState(() => status = "Location permissions are permanently denied.");
-        return;
-      }
-    }
-    Position position = await Geolocator.getCurrentPosition();
-    String apiKey = '49fd406b29a03cc12e89ee9354e08a60';
-    String url =
-        'https://api.openweathermap.org/data/2.5/weather?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey&units=metric';
+    // LocationPermission permission = await Geolocator.checkPermission();
+    // if (permission == LocationPermission.denied) {
+    //   permission = await Geolocator.requestPermission();
+    //   if (permission == LocationPermission.deniedForever) {
+    //     setState(() => status = "Location permissions are permanently denied.");
+    //     return;
+    //   }
+    // }
+    // Position position = await Geolocator.getCurrentPosition();
+    String url = 'https://api.openweathermap.org/data/2.5/weather?lat=${widget.latitude}&lon=${widget.longitude}&appid=$openWeatherMapApiKey&units=metric';
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -167,7 +231,7 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),
+        backgroundColor: Colour,
         title: Text("Weather Info"),
       ),
       body: Center(
@@ -223,6 +287,11 @@ class _WeatherPageState extends State<WeatherPage> {
 }
 
 class PollutionPage extends StatefulWidget {
+  final double latitude;
+  final double longitude;
+
+  PollutionPage({required this.latitude, required this.longitude});
+
   @override
   _PollutionPageState createState() => _PollutionPageState();
 }
@@ -239,18 +308,17 @@ class _PollutionPageState extends State<PollutionPage> {
   }
 
   Future<void> _getPollution() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        setState(() => status = "Location permissions are permanently denied.");
-        return;
-      }
-    }
-    Position position = await Geolocator.getCurrentPosition();
-    String apiKey = '49fd406b29a03cc12e89ee9354e08a60';
+    // LocationPermission permission = await Geolocator.checkPermission();
+    // if (permission == LocationPermission.denied) {
+    //   permission = await Geolocator.requestPermission();
+    //   if (permission == LocationPermission.deniedForever) {
+    //     setState(() => status = "Location permissions are permanently denied.");
+    //     return;
+    //   }
+    // }
+    // Position position = await Geolocator.getCurrentPosition();
     String url =
-        'https://api.openweathermap.org/data/2.5/air_pollution?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey';
+        'https://api.openweathermap.org/data/2.5/air_pollution?lat=${widget.latitude}&lon=${widget.longitude}&appid=$openWeatherMapApiKey';
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -269,7 +337,7 @@ class _PollutionPageState extends State<PollutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2B3CBB),
+        backgroundColor: Colour,
         title: Text("Air Pollution Info"),
       ),
       body: Center(
