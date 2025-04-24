@@ -1,2 +1,0 @@
-C:/Users/sudha/OneDrive - South Indian Education Society/Desktop/mcc_project/weather_app/android/app/.cxx/Debug/h4b81t2w/arm64-v8a/CMakeFiles/edit_cache.dir
-C:/Users/sudha/OneDrive - South Indian Education Society/Desktop/mcc_project/weather_app/android/app/.cxx/Debug/h4b81t2w/arm64-v8a/CMakeFiles/rebuild_cache.dir
