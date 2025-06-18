@@ -13,7 +13,7 @@ const Color Colour = Color(0xFF388BFD);
 Future<String?> getCityFromCoordinates(double lat, double lon) async {
   final apiKey = openWeatherMapApiKey;
   final url =
-      'https://api.openweathermap.org/geo/1.0/reverse?lat=$lat&lon=$lon&limit=1&appid=$apiKey';
+      'http://api.openweathermap.org/geo/1.0/reverse?lat=$lat&lon=$lon&limit=1&appid=$apiKey';
 
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
@@ -39,6 +39,10 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colour,
             foregroundColor: Colors.white,
           ),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colour,
+          foregroundColor: Colors.white,
         ),
       ),
       home: LoginPage(),
@@ -80,12 +84,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   void _useSelectedCity() async {
     if (selectedCity == null) return;
 
     final apiKey = openWeatherMapApiKey;
-    final url = 'https://api.openweathermap.org/geo/1.0/direct?q=$selectedCity&limit=1&appid=$apiKey';
+    final url = 'http://api.openweathermap.org/geo/1.0/direct?q=$selectedCity&limit=1&appid=$apiKey';
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -123,6 +126,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Weather App"),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -175,13 +181,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
-        backgroundColor: Colour,
-      ),
+        title: Text("Home"),),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(Icons.location_city, size: 80, color: Color(0xFF388BFD)),
+            SizedBox(height: 20),
             Text(
               "Location: $locationName",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -244,15 +250,6 @@ class _WeatherPageState extends State<WeatherPage> {
   }
 
   Future<void> _getWeather() async {
-    // LocationPermission permission = await Geolocator.checkPermission();
-    // if (permission == LocationPermission.denied) {
-    //   permission = await Geolocator.requestPermission();
-    //   if (permission == LocationPermission.deniedForever) {
-    //     setState(() => status = "Location permissions are permanently denied.");
-    //     return;
-    //   }
-    // }
-    // Position position = await Geolocator.getCurrentPosition();
     String url = 'https://api.openweathermap.org/data/2.5/weather?lat=${widget.latitude}&lon=${widget.longitude}&appid=$openWeatherMapApiKey&units=metric';
 
     final response = await http.get(Uri.parse(url));
@@ -268,13 +265,41 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
+  IconData getWeatherIcon(String description) {
+    if (description.contains('rain')) {
+      return Icons.umbrella;
+    } else if (description.contains('cloud')) {
+      return Icons.cloud;
+    } else if (description.contains('snow')) {
+      return Icons.ac_unit;
+    } else if (description.contains('clear')) {
+      return Icons.wb_sunny;
+    } else if (description.contains('thunderstorm')) {
+      return Icons.thunderstorm;
+    } else {
+      return Icons.wb_sunny; // Default icon
+    }
+  }
+
+  Color getWeatherColor(String description) {
+    if (description.contains('rain')) {
+      return Colors.blue;
+    } else if (description.contains('cloud')) {
+      return Colors.grey;
+    } else if (description.contains('snow')) {
+      return Colors.lightBlueAccent;
+    } else if (description.contains('clear')) {
+      return Colors.yellow;
+    } else if (description.contains('thunderstorm')) {
+      return Colors.deepPurple;
+    }
+    return Colors.orange; // Default color
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colour,
-        title: Text("Weather Info"),
-      ),
+      appBar: AppBar(title: Text("Weather Info"),),
       body: Center(
         child: status == "success"
             ? Card(
@@ -293,7 +318,7 @@ class _WeatherPageState extends State<WeatherPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
-                Icon(Icons.wb_sunny, color: Color(0xFFFFEB3B), size: 80),
+                Icon(getWeatherIcon(weatherDescription.toLowerCase()), color: getWeatherColor(weatherDescription.toLowerCase()), size: 80),
                 SizedBox(height: 16),
                 Text(
                   "${temperature.toStringAsFixed(1)}°C",
@@ -355,15 +380,6 @@ class _PollutionPageState extends State<PollutionPage> {
   }
 
   Future<void> _getPollution() async {
-    // LocationPermission permission = await Geolocator.checkPermission();
-    // if (permission == LocationPermission.denied) {
-    //   permission = await Geolocator.requestPermission();
-    //   if (permission == LocationPermission.deniedForever) {
-    //     setState(() => status = "Location permissions are permanently denied.");
-    //     return;
-    //   }
-    // }
-    // Position position = await Geolocator.getCurrentPosition();
     String url =
         'https://api.openweathermap.org/data/2.5/air_pollution?lat=${widget.latitude}&lon=${widget.longitude}&appid=$openWeatherMapApiKey';
 
@@ -384,7 +400,6 @@ class _PollutionPageState extends State<PollutionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colour,
         title: Text("Air Pollution Info"),
       ),
       body: Center(
@@ -405,7 +420,7 @@ class _PollutionPageState extends State<PollutionPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
-                Icon(Icons.air, color: Color(0xFFA3A7AC), size: 80),
+                Icon(getAqiIcon(aqi), color: getAqiColor(aqi), size: 80),
                 SizedBox(height: 16),
                 Text(
                   "AQI Level: $aqi",
@@ -437,5 +452,19 @@ class _PollutionPageState extends State<PollutionPage> {
         ),
       ),
     );
+  }
+
+  Color getAqiColor(int aqi) {
+    if (aqi == 1) return Colors.green; // Good
+    if (aqi == 2) return Colors.yellow; // Fair
+    if (aqi == 3) return Colors.orange; // Moderate
+    if (aqi == 4) return Colors.red; // Poor
+    if (aqi == 5) return Colors.purple; // Very Poor
+    return Colors.grey; // Default or unknown
+  }
+
+  IconData getAqiIcon(int aqi) {
+    if (aqi <= 2) return Icons.sentiment_very_satisfied;
+    return Icons.sentiment_very_dissatisfied;
   }
 }
