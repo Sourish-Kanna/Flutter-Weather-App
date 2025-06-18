@@ -7,7 +7,7 @@ void main() {
   runApp(MyApp());
 }
 
-const String openWeatherMapApiKey = '49fd406b29a03cc12e89ee9354e08a60';
+const String openWeatherMapApiKey = '';  // Enter OpenWeatherAPI Here
 const Color Colour = Color(0xFF388BFD);
 
 Future<String?> getCityFromCoordinates(double lat, double lon) async {
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
   void _useSelectedCity() async {
     if (selectedCity == null) return;
 
-    final apiKey = '49fd406b29a03cc12e89ee9354e08a60';
+    final apiKey = openWeatherMapApiKey;
     final url = 'https://api.openweathermap.org/geo/1.0/direct?q=$selectedCity&limit=1&appid=$apiKey';
 
     final response = await http.get(Uri.parse(url));
